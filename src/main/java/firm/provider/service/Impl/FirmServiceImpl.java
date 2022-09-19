@@ -1,7 +1,6 @@
 package firm.provider.service.Impl;
 
-import firm.provider.model.FirmCollector;
-import firm.provider.model.Product;
+import firm.provider.model.Firm;
 import firm.provider.repository.FirmRepository;
 import firm.provider.service.FirmService;
 import firm.provider.service.ProductService;
@@ -22,8 +21,8 @@ public class FirmServiceImpl implements FirmService {
 
 
     @Override
-    public Optional<FirmCollector> findById(long id) {
-        Optional<FirmCollector> firmCollector = firmRepository.findById(id);
+    public Optional<Firm> findById(long id) {
+        Optional<Firm> firmCollector = firmRepository.findById(id);
         if (firmCollector.isEmpty()) {
             return Optional.empty();
         }
@@ -34,18 +33,18 @@ public class FirmServiceImpl implements FirmService {
     }
 
     @Override
-    public List<FirmCollector> getAll() {
-        List<FirmCollector> firmCollectors = firmRepository.getAll();
-        for (FirmCollector firm: firmCollectors) {
+    public List<Firm> getAll() {
+        List<Firm> firms = firmRepository.getAll();
+        for (Firm firm: firms) {
             firm.setProducts(productService.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firm.getId()));
         }
 
-        return firmCollectors;
+        return firms;
     }
 
     @Override
-    public boolean addFirm(FirmCollector firmCollector) {
-        return firmRepository.save(firmCollector);
+    public boolean addFirm(Firm firm) {
+        return firmRepository.save(firm);
     }
 
     /*@Override

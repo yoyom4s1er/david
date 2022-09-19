@@ -1,17 +1,17 @@
 package firm.provider.service;
 
-import firm.provider.model.FirmCollector;
+import firm.provider.model.Firm;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface FirmService {
 
-    public Optional<FirmCollector> findById(long id);
+    public Optional<Firm> findById(long id);
 
-    public List<FirmCollector> getAll();
+    public List<Firm> getAll();
 
-    public boolean addFirm(FirmCollector firmCollector);
+    public boolean addFirm(Firm firm);
 
     /*public void deleteFirm(FirmCollector firmCollector);
 

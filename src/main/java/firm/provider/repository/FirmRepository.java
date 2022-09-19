@@ -1,9 +1,7 @@
 package firm.provider.repository;
 
-import firm.provider.model.FirmCollector;
+import firm.provider.model.Firm;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -18,9 +16,9 @@ public class FirmRepository {
 
     DataSource dataSource;
 
-    public Optional<FirmCollector> findById(long id) {
+    public Optional<Firm> findById(long id) {
 
-        final String request = "SELECT * FROM collectors where id=?";
+        final String request = "SELECT * FROM firms where id=?";
 
         try (Connection conn = dataSource.getConnection()) {
 
@@ -30,7 +28,7 @@ public class FirmRepository {
             ResultSet result = statement.executeQuery();
 
             if (result.next()) {
-                return Optional.of(new FirmCollector(
+                return Optional.of(new Firm(
                         result.getLong("id"),
                         result.getString("name"),
                         null,
@@ -45,11 +43,11 @@ public class FirmRepository {
         return Optional.empty();
     }
 
-    public List<FirmCollector> getAll() {
+    public List<Firm> getAll() {
 
-        final String request = "SELECT * FROM collectors";
+        final String request = "SELECT * FROM firms";
 
-        List<FirmCollector> firmCollectors = new ArrayList<>();
+        List<Firm> firms = new ArrayList<>();
 
         try (Connection conn = dataSource.getConnection()) {
 
@@ -57,7 +55,7 @@ public class FirmRepository {
             ResultSet result = statement.executeQuery(request);
 
             while (result.next()) {
-                firmCollectors.add(new FirmCollector(
+                firms.add(new Firm(
                         result.getLong("id"),
                         result.getString("name"),
                         null,
@@ -69,18 +67,18 @@ public class FirmRepository {
             ex.printStackTrace();
         }
 
-        return firmCollectors;
+        return firms;
     }
 
-    public boolean save(FirmCollector firmCollector) {
+    public boolean save(Firm firm) {
 
 
-        final String request = "INSERT INTO collectors(name) VALUES (?)";
+        final String request = "INSERT INTO firms(name) VALUES (?)";
 
         try (Connection conn = dataSource.getConnection()) {
 
             PreparedStatement statement = conn.prepareStatement(request);
-            statement.setObject(1, firmCollector.getName());
+            statement.setObject(1, firm.getName());
 
             statement.executeUpdate();
 

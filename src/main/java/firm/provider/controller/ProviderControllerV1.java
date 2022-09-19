@@ -1,7 +1,8 @@
 package firm.provider.controller;
 
 import firm.provider.model.Firm;
-import firm.provider.service.FirmService;
+import firm.provider.model.Provider;
+import firm.provider.service.ProviderService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,15 +11,15 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/firms/")
+@RequestMapping("api/v1/providers/")
 @AllArgsConstructor
-public class FirmControllerV1 {
+public class ProviderControllerV1 {
 
-    private final FirmService firmService;
+    private final ProviderService providerService;
 
-    @GetMapping("{id}")
-    public ResponseEntity<Firm> getFirm(@PathVariable long id) {
-        Optional<Firm> firm = firmService.findById(id);
+    /*@GetMapping("{id}")
+    public ResponseEntity<Firm> getProvider(@PathVariable long id) {
+        Optional<Firm> firm = providerService.findById(id);
 
         if (firm.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -29,14 +30,14 @@ public class FirmControllerV1 {
 
     @GetMapping("")
     public ResponseEntity<List<Firm>> getFirm() {
-        List<Firm> firms = firmService.getAll();
+        List<Firm> firms = providerService.getAll();
 
         return ResponseEntity.ok(firms);
-    }
+    }*/
 
     @PostMapping("")
-    public ResponseEntity addFirmCollector(@RequestBody Firm firm) {
-        if (firmService.addFirm(firm)) {
+    public ResponseEntity addFirmCollector(@RequestBody Provider provider) {
+        if (providerService.addProvider(provider)) {
             return ResponseEntity.ok().build();
         }
 

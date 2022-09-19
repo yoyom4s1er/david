@@ -16,7 +16,7 @@ public class Order {
     private long id;
 
     @ManyToOne
-    private FirmCollector firmCollector;
+    private Firm firm;
 
     @ManyToOne
     private Client client;

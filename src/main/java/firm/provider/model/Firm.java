@@ -6,12 +6,12 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "collectors")
+@Table(name = "firms")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FirmCollector {
+public class Firm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
