@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface FirmService {
 
-    /*public Optional<FirmCollector> getFirm(long id);*/
+    public Optional<FirmCollector> findById(long id);
 
     public List<FirmCollector> getAll();
 

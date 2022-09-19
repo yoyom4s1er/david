@@ -15,10 +15,12 @@ public class FirmServiceImpl implements FirmService {
 
     private final FirmRepository firmRepository;
 
-    /*@Override
-    public Optional<FirmCollector> getFirm(long id) {
+
+
+    @Override
+    public Optional<FirmCollector> findById(long id) {
         return firmRepository.findById(id);
-    }*/
+    }
 
     @Override
     public List<FirmCollector> getAll() {

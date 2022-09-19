@@ -17,18 +17,18 @@ public class FirmControllerV1 {
 
     private final FirmService firmService;
 
-    /*@GetMapping(name = "{id}")
+    @GetMapping("{id}")
     public ResponseEntity<FirmCollector> getFirm(@PathVariable long id) {
-        Optional<FirmCollector> firm = firmService.getFirm(id);
+        Optional<FirmCollector> firm = firmService.findById(id);
 
         if (firm.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(firm.get());
-    }*/
+    }
 
-    @GetMapping(name = "")
+    @GetMapping("")
     public ResponseEntity<List<FirmCollector>> getFirm() {
         List<FirmCollector> firmCollectors = firmService.getAll();
 
