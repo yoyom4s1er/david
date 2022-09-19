@@ -10,6 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("DuplicatedCode")
 @Component
 @AllArgsConstructor
 public class ProductRepository {
@@ -48,5 +49,29 @@ public class ProductRepository {
         }
 
         return products;
+    }
+
+    public boolean save(Product product) {
+
+        final String request = "INSERT INTO products(location_type, location_id, name, price, producer) VALUES (?,?,?,?,?)";
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(request);
+            statement.setString(1, product.getLocationType().name());
+            statement.setLong(2, product.getLocation_id());
+            statement.setString(3, product.getName());
+            statement.setFloat(4, product.getPrice());
+            statement.setString(5, product.getProducer());
+
+            statement.executeUpdate();
+
+            return true;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
     }
 }

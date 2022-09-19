@@ -8,4 +8,6 @@ import java.util.List;
 public interface ProductService {
 
     List<Product> getAllByLocationTypeAndLocationId(LocationType locationType, long locationId);
+
+    boolean addProduct(Product product);
 }

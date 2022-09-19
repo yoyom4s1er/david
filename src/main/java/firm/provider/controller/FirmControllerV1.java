@@ -28,7 +28,7 @@ public class FirmControllerV1 {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Firm>> getFirm() {
+    public ResponseEntity<List<Firm>> getFirms() {
         List<Firm> firms = firmService.getAll();
 
         return ResponseEntity.ok(firms);

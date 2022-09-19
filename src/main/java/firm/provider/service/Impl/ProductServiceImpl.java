@@ -20,4 +20,9 @@ public class ProductServiceImpl implements ProductService {
 
         return productRepository.getAllByLocationTypeAndLocationId(locationType, locationId);
     }
+
+    @Override
+    public boolean addProduct(Product product) {
+        return productRepository.save(product);
+    }
 }

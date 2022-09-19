@@ -1,14 +1,19 @@
 package firm.provider.model;
 
-import lombok.Data;
+import firm.provider.util.OperationType;
+import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
 
     @Id
@@ -18,11 +23,13 @@ public class Order {
     @ManyToOne
     private Firm firm;
 
-    @ManyToOne
-    private Client client;
+    private OperationType operationType;
+
+    private long OperationTargetId;
 
     private LocalDateTime date;
 
     @ManyToMany
     private List<Product> products;
+
 }
