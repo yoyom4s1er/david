@@ -1,6 +1,6 @@
 package firm.provider.service.Impl;
 
-import firm.provider.model.Firm;
+import firm.provider.model.FirmCollector;
 import firm.provider.repository.FirmRepository;
 import firm.provider.service.FirmService;
 import lombok.AllArgsConstructor;
@@ -15,40 +15,40 @@ public class FirmServiceImpl implements FirmService {
 
     private final FirmRepository firmRepository;
 
-    @Override
-    public Optional<Firm> getFirm(long id) {
+    /*@Override
+    public Optional<FirmCollector> getFirm(long id) {
         return firmRepository.findById(id);
+    }*/
+
+    @Override
+    public List<FirmCollector> getAll() {
+        return firmRepository.getAll();
+    }
+
+    /*@Override
+    public void addFirm(FirmCollector firmCollector) {
+        firmRepository.save(firmCollector);
     }
 
     @Override
-    public List<Firm> getFirms() {
-        return firmRepository.findAll();
+    public void deleteFirm(FirmCollector firmCollector) {
+        firmRepository.delete(firmCollector);
     }
 
     @Override
-    public void addFirm(Firm firm) {
-        firmRepository.save(firm);
-    }
-
-    @Override
-    public void deleteFirm(Firm firm) {
-        firmRepository.delete(firm);
-    }
-
-    @Override
-    public boolean updateFirm(Firm firm) {
-        Optional<Firm> firmFromStorage = firmRepository.findById(firm.getId());
+    public boolean updateFirm(FirmCollector firmCollector) {
+        Optional<FirmCollector> firmFromStorage = firmRepository.findById(firmCollector.getId());
 
         if (firmFromStorage.isEmpty()) {
             return false;
         }
 
-        firmFromStorage.get().setFirmType(firm.getFirmType());
-        firmFromStorage.get().setName(firm.getName());
-        firmFromStorage.get().setProducts(firm.getProducts());
+        firmFromStorage.get().setFirmType(firmCollector.getFirmType());
+        firmFromStorage.get().setName(firmCollector.getName());
+        firmFromStorage.get().setProducts(firmCollector.getProducts());
 
         firmRepository.save(firmFromStorage.get());
 
         return true;
-    }
+    }*/
 }

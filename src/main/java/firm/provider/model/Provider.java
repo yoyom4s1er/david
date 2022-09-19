@@ -1,6 +1,6 @@
 package firm.provider.model;
 
-public class Provider extends Firm{
+public class Provider extends FirmCollector {
 
     private long id;
 

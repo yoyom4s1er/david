@@ -1,24 +1,28 @@
 package firm.provider.model;
 
-import firm.provider.util.FirmType;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "firms")
+@Table(name = "orders")
 @Data
-public class Firm {
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
+    @ManyToOne
+    private FirmCollector firmCollector;
 
-    private FirmType firmType;
+    @ManyToOne
+    private Client client;
 
-    @OneToMany
+    private LocalDateTime date;
+
+    @ManyToMany
     private List<Product> products;
 }

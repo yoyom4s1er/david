@@ -1,16 +1,14 @@
 package firm.provider.model;
 
-import firm.provider.util.LocationType;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "products")
+@Table(name = "clients")
 @Data
-public class Product {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,14 +16,6 @@ public class Product {
 
     private String name;
 
-    private String producer;
-
-    private float price;
-
-    @ManyToMany
+    @OneToMany
     private List<Order> orders;
-
-    private LocationType locationType;
-
-    private long location_id;
 }
