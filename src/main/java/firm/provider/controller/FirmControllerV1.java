@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +21,7 @@ public class FirmControllerV1 {
         Optional<FirmCollector> firm = firmService.findById(id);
 
         if (firm.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.ok(firm.get());
@@ -33,5 +32,14 @@ public class FirmControllerV1 {
         List<FirmCollector> firmCollectors = firmService.getAll();
 
         return ResponseEntity.ok(firmCollectors);
+    }
+
+    @PostMapping("")
+    public ResponseEntity addFirmCollector(@RequestBody FirmCollector firmCollector) {
+        if (firmService.addFirm(firmCollector)) {
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 }

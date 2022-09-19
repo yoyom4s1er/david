@@ -1,7 +1,8 @@
 package firm.provider.model;
 
 import firm.provider.util.LocationType;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,7 +10,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "products")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product {
 
     @Id
@@ -25,6 +29,7 @@ public class Product {
     @ManyToMany
     private List<Order> orders;
 
+    @Enumerated(EnumType.STRING)
     private LocationType locationType;
 
     private long location_id;

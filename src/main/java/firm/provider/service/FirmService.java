@@ -11,9 +11,9 @@ public interface FirmService {
 
     public List<FirmCollector> getAll();
 
-    /*public void addFirm(FirmCollector firmCollector);
+    public boolean addFirm(FirmCollector firmCollector);
 
-    public void deleteFirm(FirmCollector firmCollector);
+    /*public void deleteFirm(FirmCollector firmCollector);
 
     public boolean updateFirm(FirmCollector firmCollector);*/
 }

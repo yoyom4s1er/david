@@ -20,7 +20,7 @@ public class FirmRepository {
 
     public Optional<FirmCollector> findById(long id) {
 
-        final String request = "SELECT * FROM collector_firms where id=?";
+        final String request = "SELECT * FROM collectors where id=?";
 
         try (Connection conn = dataSource.getConnection()) {
 
@@ -33,7 +33,8 @@ public class FirmRepository {
                 return Optional.of(new FirmCollector(
                         result.getLong("id"),
                         result.getString("name"),
-                        new ArrayList<>()
+                        null,
+                        null
                 ));
             }
 
@@ -46,7 +47,7 @@ public class FirmRepository {
 
     public List<FirmCollector> getAll() {
 
-        final String request = "SELECT * FROM collector_firms";
+        final String request = "SELECT * FROM collectors";
 
         List<FirmCollector> firmCollectors = new ArrayList<>();
 
@@ -59,7 +60,8 @@ public class FirmRepository {
                 firmCollectors.add(new FirmCollector(
                         result.getLong("id"),
                         result.getString("name"),
-                        new ArrayList<>()
+                        null,
+                        null
                 ));
             }
 
@@ -68,5 +70,26 @@ public class FirmRepository {
         }
 
         return firmCollectors;
+    }
+
+    public boolean save(FirmCollector firmCollector) {
+
+
+        final String request = "INSERT INTO collectors(name) VALUES (?)";
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(request);
+            statement.setObject(1, firmCollector.getName());
+
+            statement.executeUpdate();
+
+            return true;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
     }
 }

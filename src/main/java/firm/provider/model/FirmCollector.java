@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "collector_firms")
+@Table(name = "collectors")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,4 +21,8 @@ public class FirmCollector {
 
     @OneToMany
     private List<Order> orders;
+
+    @Transient
+    private List<Product> products;
+
 }
