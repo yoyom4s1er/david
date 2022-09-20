@@ -74,4 +74,32 @@ public class ProductRepository {
 
         return false;
     }
+
+    public boolean save(List<Product> products) {
+
+        final String request = "INSERT INTO products(location_type, location_id, name, price, producer) VALUES (?,?,?,?,?)";
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(request);
+
+            for (Product product: products) {
+                statement.setString(1, product.getLocationType().name());
+                statement.setLong(2, product.getLocation_id());
+                statement.setString(3, product.getName());
+                statement.setFloat(4, product.getPrice());
+                statement.setString(5, product.getProducer());
+                statement.addBatch();
+            }
+
+            statement.executeBatch();
+
+            return true;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
 }

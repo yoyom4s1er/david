@@ -1,8 +1,12 @@
 package firm.provider.service.Impl;
 
 import firm.provider.model.Firm;
+import firm.provider.model.Order;
 import firm.provider.repository.FirmRepository;
+import firm.provider.repository.OrderRepository;
+import firm.provider.repository.ProductRepository;
 import firm.provider.service.FirmService;
+import firm.provider.service.OrderService;
 import firm.provider.service.ProductService;
 import firm.provider.util.LocationType;
 import lombok.AllArgsConstructor;
@@ -16,8 +20,8 @@ import java.util.Optional;
 public class FirmServiceImpl implements FirmService {
 
     private final FirmRepository firmRepository;
-    private final ProductService productService;
-
+    private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
 
     @Override
@@ -27,7 +31,7 @@ public class FirmServiceImpl implements FirmService {
             return Optional.empty();
         }
         firmCollector.get().setProducts(
-                productService.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firmCollector.get().getId()));
+                productRepository.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firmCollector.get().getId()));
 
         return firmCollector;
     }
@@ -40,7 +44,7 @@ public class FirmServiceImpl implements FirmService {
         }
 
         firmCollector.get().setProducts(
-                productService.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firmCollector.get().getId()));
+                productRepository.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firmCollector.get().getId()));
 
         return firmCollector;
     }
@@ -48,8 +52,14 @@ public class FirmServiceImpl implements FirmService {
     @Override
     public List<Firm> getAll() {
         List<Firm> firms = firmRepository.getAll();
+
         for (Firm firm: firms) {
-            firm.setProducts(productService.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firm.getId()));
+            List<Order> orders = orderRepository.getAllByFirmId(firm.getId());
+            for (Order order : orders) {
+                order.setFirm(firm);
+            }
+            firm.setOrders(orders);
+            firm.setProducts(productRepository.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firm.getId()));
         }
 
         return firms;
@@ -60,25 +70,25 @@ public class FirmServiceImpl implements FirmService {
         return firmRepository.save(firm);
     }
 
-    /*@Override
-    public void deleteFirm(FirmCollector firmCollector) {
-        firmRepository.delete(firmCollector);
+    @Override
+    public void deleteFirm(Firm firmCollector) {
+        /*firmRepository.delete(firmCollector);*/
     }
 
     @Override
-    public boolean updateFirm(FirmCollector firmCollector) {
-        Optional<FirmCollector> firmFromStorage = firmRepository.findById(firmCollector.getId());
+    public boolean updateFirm(Firm firmCollector) {
+        Optional<Firm> firmFromStorage = firmRepository.findById(firmCollector.getId());
 
         if (firmFromStorage.isEmpty()) {
             return false;
         }
 
-        firmFromStorage.get().setFirmType(firmCollector.getFirmType());
+        /*firmFromStorage.get().setFirmType(firmCollector.getFirmType());*/
         firmFromStorage.get().setName(firmCollector.getName());
         firmFromStorage.get().setProducts(firmCollector.getProducts());
 
         firmRepository.save(firmFromStorage.get());
 
         return true;
-    }*/
+    }
 }

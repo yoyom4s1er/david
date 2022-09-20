@@ -1,11 +1,13 @@
 package firm.provider.controller;
 
+import firm.provider.dto.FirmDto;
 import firm.provider.model.Firm;
 import firm.provider.service.FirmService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +30,12 @@ public class FirmControllerV1 {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Firm>> getFirms() {
-        List<Firm> firms = firmService.getAll();
+    public ResponseEntity<List<FirmDto>> getFirms() {
+        List<FirmDto> firms = new ArrayList<>();
+
+        for (Firm firm : firmService.getAll()) {
+            firms.add(FirmDto.fromFirm(firm));
+        }
 
         return ResponseEntity.ok(firms);
     }
