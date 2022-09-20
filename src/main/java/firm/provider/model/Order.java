@@ -23,6 +23,7 @@ public class Order {
     @ManyToOne
     private Firm firm;
 
+    @Enumerated(EnumType.STRING)
     private OperationType operationType;
 
     private long OperationTargetId;

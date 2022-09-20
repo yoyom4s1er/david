@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +34,10 @@ public class OrderRepository {
             while (result.next()) {
                 orders.add(new Order(
                         result.getLong("id"),
-                        null,
+                        new Firm(result.getLong("id")),
                         OperationType.valueOf(result.getString("operation_type")),
                         result.getLong("operation_target_id"),
-                        LocalDateTime.parse(result.getString("date")),
+                        LocalDateTime.ofInstant(result.getTimestamp("date").toInstant(), ZoneId.systemDefault()),
                         null
                 ));
             }

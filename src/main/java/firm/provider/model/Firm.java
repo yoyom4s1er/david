@@ -25,4 +25,7 @@ public class Firm {
     @Transient
     private List<Product> products;
 
+    public Firm(long id) {
+        this.id = id;
+    }
 }
