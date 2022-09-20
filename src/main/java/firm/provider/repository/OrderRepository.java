@@ -7,14 +7,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("DuplicatedCode")
 @Component
 @AllArgsConstructor
 public class OrderRepository {
@@ -51,6 +49,24 @@ public class OrderRepository {
     }
 
     public boolean save(Order order) {
+        final String request = "INSERT INTO orders(operation_target_id, date, operation_type, firm_id) VALUES (?,?,?,?)";
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(request);
+            statement.setObject(1, order.getOperationTargetId());
+            statement.setObject(2, order.getDate());
+            statement.setObject(3, order.getOperationType());
+            statement.setObject(4, order.getFirm().getId());
+
+            statement.executeUpdate();
+
+            return true;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
         return false;
     }
 }
