@@ -17,16 +17,16 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ProviderRepository {
 
+    public static String INSERT = "INSERT INTO providers(name) VALUES (?)";
+    public static String SELECT_BY_ID = "SELECT * FROM providers where id=?";
+
     DataSource dataSource;
 
     public boolean save(Provider provider) {
 
-
-        final String request = "INSERT INTO providers(name) VALUES (?)";
-
         try (Connection conn = dataSource.getConnection()) {
 
-            PreparedStatement statement = conn.prepareStatement(request);
+            PreparedStatement statement = conn.prepareStatement(INSERT);
             statement.setObject(1, provider.getName());
 
             statement.executeUpdate();
@@ -42,11 +42,9 @@ public class ProviderRepository {
 
     public Optional<Provider> findById(long id) {
 
-        final String request = "SELECT * FROM providers where id=?";
-
         try (Connection conn = dataSource.getConnection()) {
 
-            PreparedStatement statement = conn.prepareStatement(request);
+            PreparedStatement statement = conn.prepareStatement(SELECT_BY_ID);
             statement.setLong(1, id);
 
             ResultSet result = statement.executeQuery();

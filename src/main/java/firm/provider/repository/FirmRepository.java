@@ -1,6 +1,8 @@
 package firm.provider.repository;
 
 import firm.provider.model.Firm;
+import firm.provider.model.Order;
+import firm.provider.model.Product;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,45 +16,39 @@ import java.util.Optional;
 @AllArgsConstructor
 public class FirmRepository {
 
+    public static String SELECT_BY_ID = "SELECT * FROM firms where id=?";
+    public static String SELECT = "SELECT * FROM firms";
+    public static String INSERT = "INSERT INTO firms(name) VALUES (?)";
+
     DataSource dataSource;
 
     public Optional<Firm> findById(long id) {
+        Firm firm = selectById(dataSource, id);
 
-        final String request = "SELECT * FROM firms where id=?";
-
-        try (Connection conn = dataSource.getConnection()) {
-
-            PreparedStatement statement = conn.prepareStatement(request);
-            statement.setLong(1, id);
-
-            ResultSet result = statement.executeQuery();
-
-            if (result.next()) {
-                return Optional.of(new Firm(
-                        result.getLong("id"),
-                        result.getString("name"),
-                        null,
-                        null
-                ));
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        if (firm == null) {
+            return Optional.empty();
         }
 
-        return Optional.empty();
+        List<Product> products = ProductRepository.selectByFirmId(dataSource, id);
+        for (Product product : products) {
+            product.setOrders(OrderRepository.selectByproductId(product.getId()));
+        }
+
+        List<Order> orders = OrderRepository.selectByFirmId(dataSource, id);
+
+        for (Order order : orders) {
+            order.setProducts(ProductRepository.);
+        }
     }
 
     public List<Firm> getAll() {
-
-        final String request = "SELECT * FROM firms";
 
         List<Firm> firms = new ArrayList<>();
 
         try (Connection conn = dataSource.getConnection()) {
 
             Statement statement = conn.createStatement();
-            ResultSet result = statement.executeQuery(request);
+            ResultSet result = statement.executeQuery(SELECT);
 
             while (result.next()) {
                 firms.add(new Firm(
@@ -72,12 +68,9 @@ public class FirmRepository {
 
     public boolean save(Firm firm) {
 
-
-        final String request = "INSERT INTO firms(name) VALUES (?)";
-
         try (Connection conn = dataSource.getConnection()) {
 
-            PreparedStatement statement = conn.prepareStatement(request);
+            PreparedStatement statement = conn.prepareStatement(INSERT);
             statement.setObject(1, firm.getName());
 
             statement.executeUpdate();
@@ -89,5 +82,38 @@ public class FirmRepository {
         }
 
         return false;
+    }
+
+    public static Firm extractFirm(ResultSet resultSet) throws SQLException {
+
+
+        return new Firm(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                null,
+                null
+        );
+    }
+
+    protected static Firm selectById(DataSource dataSource,long id) {
+
+        Firm firm = null;
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(SELECT_BY_ID);
+            statement.setLong(1, id);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                firm = extractFirm(result);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return firm;
     }
 }

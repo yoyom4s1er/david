@@ -23,17 +23,21 @@ public class FirmServiceImpl implements FirmService {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
 
-
     @Override
     public Optional<Firm> findById(long id) {
-        Optional<Firm> firmCollector = firmRepository.findById(id);
-        if (firmCollector.isEmpty()) {
+        Optional<Firm> firm = firmRepository.findById(id);
+        if (firm.isEmpty()) {
             return Optional.empty();
         }
-        firmCollector.get().setProducts(
-                productRepository.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firmCollector.get().getId()));
+        firm.get().setProducts(
+                productRepository.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firm.get().getId())
+        );
 
-        return firmCollector;
+        firm.get().setOrders(
+                orderRepository.getAllByFirmId(firm.get().getId())
+        );
+
+        return firm;
     }
 
     @Override
