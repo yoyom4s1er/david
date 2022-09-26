@@ -20,6 +20,6 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     public Provider getProvider(long id) {
-        return databaseQueryHandler.
+        return null;
     }
 }

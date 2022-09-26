@@ -19,14 +19,14 @@ public class FirmControllerV1 {
     private final FirmService firmService;
 
     @GetMapping("{id}")
-    public ResponseEntity<Firm> getFirm(@PathVariable long id) {
+    public ResponseEntity<FirmDto> getFirm(@PathVariable long id) {
         Optional<Firm> firm = firmService.findById(id);
 
         if (firm.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.ok(firm.get());
+        return ResponseEntity.ok(FirmDto.fromFirm(firm.get()));
     }
 
     @GetMapping("")

@@ -31,14 +31,20 @@ public class FirmRepository {
 
         List<Product> products = ProductRepository.selectByFirmId(dataSource, id);
         for (Product product : products) {
-            product.setOrders(OrderRepository.selectByproductId(product.getId()));
+            product.setOrders(OrderRepository.selectByproductId(dataSource, product.getId()));
         }
 
         List<Order> orders = OrderRepository.selectByFirmId(dataSource, id);
 
         for (Order order : orders) {
-            order.setProducts(ProductRepository.);
+            order.setProducts(ProductRepository.selectByOrder(dataSource, order));
+            order.setFirm(firm);
         }
+
+        firm.setProducts(products);
+        firm.setOrders(orders);
+
+        return Optional.of(firm);
     }
 
     public List<Firm> getAll() {
@@ -51,12 +57,24 @@ public class FirmRepository {
             ResultSet result = statement.executeQuery(SELECT);
 
             while (result.next()) {
-                firms.add(new Firm(
-                        result.getLong("id"),
-                        result.getString("name"),
-                        null,
-                        null
-                ));
+                firms.add(extractFirm(result));
+            }
+
+            for (Firm firm: firms) {
+                List<Product> products = ProductRepository.selectByFirmId(dataSource, firm.getId());
+                for (Product product : products) {
+                    product.setOrders(OrderRepository.selectByproductId(dataSource, product.getId()));
+                }
+
+                List<Order> orders = OrderRepository.selectByFirmId(dataSource, firm.getId());
+
+                for (Order order : orders) {
+                    order.setProducts(ProductRepository.selectByOrder(dataSource, order));
+                    order.setFirm(firm);
+                }
+
+                firm.setProducts(products);
+                firm.setOrders(orders);
             }
 
         } catch (SQLException ex) {

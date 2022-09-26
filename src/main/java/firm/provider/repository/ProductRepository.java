@@ -104,30 +104,18 @@ public class ProductRepository {
         return false;
     }
 
-    protected static List<Product> selectByOrder(DataSource dataSource, List<Order> orders) {
+    protected static List<Product> selectByOrder(DataSource dataSource, Order order) {
         List<Product> products = new ArrayList<>();
 
         try (Connection conn = dataSource.getConnection()) {
 
-            PreparedStatement statement = conn.prepareStatement(SELECT_BY_ORDER_LIST);
+            PreparedStatement statement = conn.prepareStatement(SELECT_BY_ORDER);
+            statement.setLong(1, order.getId());
 
-            for (Order order : orders) {
-                statement.setLong(1, order.getId());
+            ResultSet result = statement.executeQuery();
 
-                ResultSet result = statement.executeQuery();
-
-                while (result.next()) {
-                    products.add(new Product(
-                            result.getLong("id"),
-                            result.getString("name"),
-                            result.getString("producer"),
-                            result.getFloat("price"),
-                            null,
-                            LocationType.valueOf(result.getString("location_type")),
-                            result.getLong("location_id")
-                    ));
-                }
-
+            while (result.next()) {
+                products.add(extractProduct(result));
             }
 
         } catch (SQLException ex) {

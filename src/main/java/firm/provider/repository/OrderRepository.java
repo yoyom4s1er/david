@@ -25,6 +25,7 @@ public class OrderRepository {
     public static String INSERT_INTO_ORDERS_PRODUCTS = "INSERT INTO orders_products(order_id, products_id) VALUES (?,?)";
     public static String SELECT_BY_FIRM_ID = "SELECT * FROM orders where firm_id=?";
     public static String SELECT_BY_PRODUCT_ID = "select * from orders_products where products_id=?";
+    public static String SELECT_BY_ID = "Select * from orders where id=?";
 
     DataSource dataSource;
 
@@ -137,14 +138,7 @@ public class OrderRepository {
             ResultSet result = statement.executeQuery();
 
             while (result.next()) {
-                orders.add(new Order(
-                        result.getLong("id"),
-                        new Firm(result.getLong("firm_id")),
-                        OperationType.valueOf(result.getString("operation_type")),
-                        result.getLong("operation_target_id"),
-                        LocalDateTime.ofInstant(result.getTimestamp("date").toInstant(), ZoneId.systemDefault()),
-                        null
-                ));
+                orders.add(extractOrder(result));
             }
 
         } catch (SQLException ex) {
@@ -155,7 +149,24 @@ public class OrderRepository {
     }
 
     protected static Order selectById(DataSource dataSource, long id) {
+        Order order = null;
 
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(SELECT_BY_ID);
+            statement.setLong(1, id);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                order = extractOrder(result);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return order;
     }
 
     protected static List<Order> selectByproductId(DataSource dataSource, long id) {
@@ -188,7 +199,7 @@ public class OrderRepository {
     public static Order extractOrder(ResultSet result) throws SQLException {
         return new Order(
                 result.getLong("id"),
-                new Firm(result.getLong("firm_id")),
+                null,
                 OperationType.valueOf(result.getString("operation_type")),
                 result.getLong("operation_target_id"),
                 LocalDateTime.ofInstant(result.getTimestamp("date").toInstant(), ZoneId.systemDefault()),

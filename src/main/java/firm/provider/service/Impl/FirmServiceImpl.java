@@ -25,48 +25,17 @@ public class FirmServiceImpl implements FirmService {
 
     @Override
     public Optional<Firm> findById(long id) {
-        Optional<Firm> firm = firmRepository.findById(id);
-        if (firm.isEmpty()) {
-            return Optional.empty();
-        }
-        firm.get().setProducts(
-                productRepository.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firm.get().getId())
-        );
-
-        firm.get().setOrders(
-                orderRepository.getAllByFirmId(firm.get().getId())
-        );
-
-        return firm;
+        return firmRepository.findById(id);
     }
 
     @Override
     public Optional<Firm> findById(Firm firm) {
-        Optional<Firm> firmCollector = firmRepository.findById(firm.getId());
-        if (firmCollector.isEmpty()) {
-            return Optional.empty();
-        }
-
-        firmCollector.get().setProducts(
-                productRepository.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firmCollector.get().getId()));
-
-        return firmCollector;
+        return firmRepository.findById(firm.getId());
     }
 
     @Override
     public List<Firm> getAll() {
-        List<Firm> firms = firmRepository.getAll();
-
-        for (Firm firm: firms) {
-            List<Order> orders = orderRepository.getAllByFirmId(firm.getId());
-            for (Order order : orders) {
-                order.setFirm(firm);
-            }
-            firm.setOrders(orders);
-            firm.setProducts(productRepository.getAllByLocationTypeAndLocationId(LocationType.FIRM_COLLECTOR, firm.getId()));
-        }
-
-        return firms;
+        return firmRepository.getAll();
     }
 
     @Override

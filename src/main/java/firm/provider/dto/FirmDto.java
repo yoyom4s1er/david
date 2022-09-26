@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import firm.provider.model.Firm;
 import firm.provider.model.Order;
 import firm.provider.model.Product;
+import firm.provider.util.OperationType;
 import lombok.Data;
 
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class FirmDto {
@@ -17,8 +19,7 @@ public class FirmDto {
 
     private String name;
 
-    @JsonIgnoreProperties(value = { "firm", "products" })
-    private List<Order> orders;
+    private List<Long> orders_id;
 
     @JsonIgnoreProperties(value = { "orders", "locationType", "locationId" })
     private List<Product> products;
@@ -28,8 +29,9 @@ public class FirmDto {
 
         firm.setId(id);
         firm.setName(name);
-        firm.setOrders(orders);
         firm.setProducts(products);
+
+        firm.setOrders(orders_id.stream().map(id -> new Order(id)).collect(Collectors.toList()));
 
         return firm;
     }
@@ -39,8 +41,10 @@ public class FirmDto {
 
         firmDto.setId(firm.getId());
         firmDto.setName(firm.getName());
-        firmDto.setOrders(firm.getOrders());
         firmDto.setProducts(firm.getProducts());
+
+        firmDto.setOrders_id(firm.getOrders().stream().map(Order::getId).collect(Collectors.toList()));
+
 
         return firmDto;
     }

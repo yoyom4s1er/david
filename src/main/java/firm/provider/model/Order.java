@@ -1,5 +1,6 @@
 package firm.provider.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import firm.provider.util.OperationType;
 import lombok.*;
 
@@ -33,4 +34,7 @@ public class Order {
     @ManyToMany
     private List<Product> products;
 
+    public Order(long id) {
+        this.id = id;
+    }
 }
