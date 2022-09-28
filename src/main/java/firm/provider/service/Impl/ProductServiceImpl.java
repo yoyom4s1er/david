@@ -16,9 +16,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public List<Product> getAllByLocationTypeAndLocationId(LocationType locationType, long locationId) {
+    public List<Product> getAll() {
+        return productRepository.getAll();
+    }
 
-        return productRepository.getAllByLocationTypeAndLocationId(locationType, locationId);
+    @Override
+    public List<Product> getAllByLocationType(LocationType locationType) {
+        return productRepository.getAllByLocationType(locationType);
     }
 
     @Override

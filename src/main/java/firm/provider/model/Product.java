@@ -2,10 +2,8 @@ package firm.provider.model;
 
 import firm.provider.util.LocationType;
 import lombok.*;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,4 +31,7 @@ public class Product {
     private LocationType locationType;
 
     private long location_id;
+
+    @Transient
+    private Storage location;
 }

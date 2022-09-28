@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Provider {
+public class Provider implements Storage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

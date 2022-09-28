@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("api/v1/providers/")
+@RequestMapping("api/v1/providers")
 @AllArgsConstructor
 public class ProviderControllerV1 {
 
     private final ProviderService providerService;
 
-    /*@GetMapping("{id}")
+    /*@GetMapping("/{id}")
     public ResponseEntity<Firm> getProvider(@PathVariable long id) {
         Optional<Firm> firm = providerService.findById(id);
 
@@ -26,14 +27,15 @@ public class ProviderControllerV1 {
         }
 
         return ResponseEntity.ok(firm.get());
-    }
+    }*/
 
     @GetMapping("")
-    public ResponseEntity<List<Firm>> getFirm() {
-        List<Firm> firms = providerService.getAll();
+    public ResponseEntity<List<Provider>> getFirm() {
+        List<Provider> providers = providerService.getProviders();
 
-        return ResponseEntity.ok(firms);
-    }*/
+        return ResponseEntity.ok(providers);
+    }
+
 
     @PostMapping("")
     public ResponseEntity addFirmCollector(@RequestBody Provider provider) {

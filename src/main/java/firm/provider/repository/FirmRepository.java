@@ -37,7 +37,7 @@ public class FirmRepository {
         List<Order> orders = OrderRepository.selectByFirmId(dataSource, id);
 
         for (Order order : orders) {
-            order.setProducts(ProductRepository.selectByOrder(dataSource, order));
+            order.setProducts(ProductRepository.selectByOrderId(dataSource, order.getId()));
             order.setFirm(firm);
         }
 
@@ -69,7 +69,7 @@ public class FirmRepository {
                 List<Order> orders = OrderRepository.selectByFirmId(dataSource, firm.getId());
 
                 for (Order order : orders) {
-                    order.setProducts(ProductRepository.selectByOrder(dataSource, order));
+                    order.setProducts(ProductRepository.selectByOrderId(dataSource, order.getId()));
                     order.setFirm(firm);
                 }
 
@@ -102,7 +102,7 @@ public class FirmRepository {
         return false;
     }
 
-    public static Firm extractFirm(ResultSet resultSet) throws SQLException {
+    private static Firm extractFirm(ResultSet resultSet) throws SQLException {
 
 
         return new Firm(

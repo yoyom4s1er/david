@@ -36,30 +36,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean addOrder(Order order) {
-        if (order.getOperationType() == OperationType.BUY) {
-            return processOperationBuy(order);
-        }
         return orderRepository.save(order);
-    }
-
-    private boolean processOperationBuy(Order order) {
-        Provider provider = providerRepository.findById(order.getOperationTargetId()).get();
-        List<Product> requiredProducts = productRepository.getAllByLocationTypeAndLocationId(LocationType.FIRM_PROVIDER, order.getOperationTargetId());
-
-        for (Product product: order.getProducts()) {
-            if (!requiredProducts.contains(product)) {
-                return false;
-            }
-        }
-
-        for (Product product: order.getProducts()) {
-            product.setLocationType(LocationType.FIRM_COLLECTOR);
-            product.setLocation_id(order.getFirm().getId());
-        }
-
-        orderRepository.save(order);
-
-        return productRepository.save(order.getProducts());
     }
 
     @Override

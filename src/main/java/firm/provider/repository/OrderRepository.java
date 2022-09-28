@@ -24,7 +24,7 @@ public class OrderRepository {
     public static String INSERT = "INSERT INTO orders(operation_target_id, date, operation_type, firm_id) VALUES (?,?,?,?)";
     public static String INSERT_INTO_ORDERS_PRODUCTS = "INSERT INTO orders_products(order_id, products_id) VALUES (?,?)";
     public static String SELECT_BY_FIRM_ID = "SELECT * FROM orders where firm_id=?";
-    public static String SELECT_BY_PRODUCT_ID = "select * from orders_products where products_id=?";
+    public static String SELECT_BY_PRODUCT_ID = "select order_id from orders_products where products_id=?";
     public static String SELECT_BY_ID = "Select * from orders where id=?";
 
     DataSource dataSource;
@@ -179,14 +179,8 @@ public class OrderRepository {
             ResultSet result = statement.executeQuery();
 
             while (result.next()) {
-                orders.add(new Order(
-                        result.getLong("id"),
-                        new Firm(result.getLong("firm_id")),
-                        OperationType.valueOf(result.getString("operation_type")),
-                        result.getLong("operation_target_id"),
-                        LocalDateTime.ofInstant(result.getTimestamp("date").toInstant(), ZoneId.systemDefault()),
-                        null
-                ));
+                long orderId = result.getLong("order_id");
+                orders.add(selectById(dataSource, orderId));
             }
 
         } catch (SQLException ex) {
@@ -196,7 +190,7 @@ public class OrderRepository {
         return orders;
     }
 
-    public static Order extractOrder(ResultSet result) throws SQLException {
+    private static Order extractOrder(ResultSet result) throws SQLException {
         return new Order(
                 result.getLong("id"),
                 null,

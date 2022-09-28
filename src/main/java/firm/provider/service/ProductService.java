@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<Product> getAllByLocationTypeAndLocationId(LocationType locationType, long locationId);
+    List<Product> getAll();
+
+    List<Product> getAllByLocationType(LocationType locationType);
 
     boolean addProduct(Product product);
 }
