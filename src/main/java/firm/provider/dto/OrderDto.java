@@ -24,7 +24,7 @@ public class OrderDto {
 
     private LocalDateTime date;
 
-    private List<Long> products;
+    private List<Long> products = new ArrayList<>();
 
     public Order toOrder() {
         Order order = new Order();

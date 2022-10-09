@@ -42,6 +42,7 @@ public class OrderServiceImpl implements OrderService {
 
             order.setFirm(firmRepository.findByName(order.getFirm().getName()).get());
             order.setDate(LocalDateTime.now());
+            order.setTotalPrice(productRepository.getTotalPrice(order.getProducts()));
 
             if (order.getOperationType() == OperationType.BUY) {
                 for (Product product : order.getProducts()) {
@@ -70,11 +71,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getAllByFirmId(long id) {
-        List<Order> orders = orderRepository.getAllByFirmId(id);
-        for (Order order : orders) {
-            order.setFirm(firmRepository.findById(order.getFirm().getId()).get());
-        }
-
-        return orderRepository.getAll();
+       return orderRepository.getAllByFirmId(id);
     }
 }

@@ -21,7 +21,7 @@ import java.util.List;
 public class OrderRepository {
 
     public static String SELECT = "SELECT * FROM orders";
-    public static String INSERT = "INSERT INTO orders(operation_target_id, date, operation_type, firm_id) VALUES (?,?,?,?)";
+    public static String INSERT = "INSERT INTO orders(operation_target_id, date, operation_type, total_price, firm_id) VALUES (?,?,?,?,?)";
     public static String INSERT_INTO_ORDERS_PRODUCTS = "INSERT INTO orders_products(order_id, products_id) VALUES (?,?)";
     public static String SELECT_BY_FIRM_ID = "SELECT * FROM orders where firm_id=?";
     public static String SELECT_BY_PRODUCT_ID = "select order_id from orders_products where products_id=?";
@@ -45,6 +45,7 @@ public class OrderRepository {
                         OperationType.valueOf(result.getString("operation_type")),
                         result.getLong("operation_target_id"),
                         LocalDateTime.ofInstant(result.getTimestamp("date").toInstant(), ZoneId.systemDefault()),
+                        result.getFloat("total_price"),
                         null
                 ));
             }
@@ -85,7 +86,18 @@ public class OrderRepository {
     }
 
     public List<Order> getAllByFirmId(long id) {
-        return selectByFirmId(dataSource, id);
+        List<Order> orders = selectByFirmId(dataSource, id);
+        Firm firm = FirmRepository.selectById(dataSource, id);
+        firm.setOrders(orders);
+        firm.setProducts(ProductRepository.selectByFirmId(dataSource, id));
+
+        for (Order order:
+             orders) {
+            order.setFirm(firm);
+            order.setProducts(ProductRepository.selectByOrderId(dataSource, order.getId()));
+        }
+
+        return orders;
     }
 
     protected static List<Order> selectByFirmId(DataSource dataSource, long id) {
@@ -139,7 +151,8 @@ public class OrderRepository {
                 statement.setObject(1, order.getOperationTargetId());
                 statement.setObject(2, order.getDate());
                 statement.setString(3, order.getOperationType().name());
-                statement.setObject(4, order.getFirm().getId());
+                statement.setFloat(4, order.getTotalPrice());
+                statement.setObject(5, order.getFirm().getId());
                 statement.addBatch();
             }
 
@@ -167,7 +180,8 @@ public class OrderRepository {
             statement.setObject(1, order.getOperationTargetId());
             statement.setObject(2, order.getDate());
             statement.setString(3, order.getOperationType().name());
-            statement.setObject(4, order.getFirm().getId());
+            statement.setFloat(4, order.getTotalPrice());
+            statement.setObject(5, order.getFirm().getId());
 
             statement.executeUpdate();
 
@@ -265,6 +279,7 @@ public class OrderRepository {
                 OperationType.valueOf(result.getString("operation_type")),
                 result.getLong("operation_target_id"),
                 LocalDateTime.ofInstant(result.getTimestamp("date").toInstant(), ZoneId.systemDefault()),
+                result.getFloat("total_price"),
                 null
         );
     }

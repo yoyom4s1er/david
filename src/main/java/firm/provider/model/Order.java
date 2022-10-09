@@ -32,6 +32,8 @@ public class Order {
 
     private LocalDateTime date;
 
+    private float totalPrice;
+
     @ManyToMany
     private List<Product> products;
 

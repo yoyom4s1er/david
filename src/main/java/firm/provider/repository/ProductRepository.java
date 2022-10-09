@@ -26,6 +26,7 @@ public class ProductRepository {
     public static String SELECT_BY_FIRM_ID = "SELECT * FROM products where location_type=? and location_id=?";
     public static String SELECT_BY_PROVIDER_ID = "SELECT * FROM products where location_type=? and location_id=?";
     public static String UPDATE_LOCATION_TYPE_AND_LOCATION_ID_BY_ID = "UPDATE products set location_type=?, location_id=? where id=?";
+    public static String SELECT_TOTAL_PRICE_BY_ID = "SELECT price FROM products where id=?";
 
     DataSource dataSource;
 
@@ -102,6 +103,10 @@ public class ProductRepository {
         }
 
         return products;
+    }
+
+    public float getTotalPrice(List<Product> products) {
+        return selectTotalPriceById(dataSource, products);
     }
 
     public boolean save(Product product) {
@@ -278,7 +283,7 @@ public class ProductRepository {
         return products;
     }
 
-    protected List<Product> selectAllByLocationTypeAndLocationId(DataSource dataSource, LocationType locationType, long locationId) {
+    protected static List<Product> selectAllByLocationTypeAndLocationId(DataSource dataSource, LocationType locationType, long locationId) {
 
         List<Product> products = new ArrayList<>();
 
@@ -301,7 +306,7 @@ public class ProductRepository {
         return products;
     }
 
-    protected List<Product> selectAllByLocationType(DataSource dataSource, LocationType locationType) {
+    protected static List<Product> selectAllByLocationType(DataSource dataSource, LocationType locationType) {
 
         List<Product> products = new ArrayList<>();
 
@@ -323,7 +328,32 @@ public class ProductRepository {
         return products;
     }
 
-    protected void updateLocationTypeAndLocationIdById(DataSource dataSource, LocationType locationType, long locationId, long id) {
+    protected static float selectTotalPriceById(DataSource dataSource,List<Product> products) {
+
+        float totalPrice = 0;
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(SELECT_TOTAL_PRICE_BY_ID);
+
+            for (Product product: products) {
+                statement.setLong(1, product.getId());
+
+                ResultSet result = statement.executeQuery();
+
+                while (result.next()) {
+                    totalPrice += result.getFloat(1);
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return totalPrice;
+    }
+
+    protected static void updateLocationTypeAndLocationIdById(DataSource dataSource, LocationType locationType, long locationId, long id) {
 
         try (Connection conn = dataSource.getConnection()) {
 
