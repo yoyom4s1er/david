@@ -1,8 +1,6 @@
 package firm.provider.dto;
 
 import firm.provider.model.Order;
-import firm.provider.util.LocationType;
-
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;

@@ -3,7 +3,7 @@ package firm.provider.service.Impl;
 import firm.provider.model.Product;
 import firm.provider.repository.ProductRepository;
 import firm.provider.service.ProductService;
-import firm.provider.util.LocationType;
+import firm.provider.utils.LocationType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +28,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean addProduct(Product product) {
         return productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> getAllByLocationName(String firm, LocationType locType) {
+
+        return productRepository.getAllByLocationName(firm, locType);
     }
 }

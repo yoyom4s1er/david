@@ -1,11 +1,10 @@
 package firm.provider.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import firm.provider.model.Firm;
 import firm.provider.model.Order;
 import firm.provider.model.Product;
-import firm.provider.util.OperationType;
+import firm.provider.utils.OperationType;
 import lombok.Data;
 
 import java.time.LocalDateTime;

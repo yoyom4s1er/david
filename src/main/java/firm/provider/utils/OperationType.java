@@ -1,4 +1,4 @@
-package firm.provider.util;
+package firm.provider.utils;
 
 public enum OperationType {
     BUY,

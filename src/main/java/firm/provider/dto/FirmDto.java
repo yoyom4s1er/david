@@ -4,11 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import firm.provider.model.Firm;
 import firm.provider.model.Order;
 import firm.provider.model.Product;
-import firm.provider.util.OperationType;
 import lombok.Data;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 

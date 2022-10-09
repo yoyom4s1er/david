@@ -3,8 +3,7 @@ package firm.provider.repository;
 import firm.provider.model.Firm;
 import firm.provider.model.Order;
 import firm.provider.model.Product;
-import firm.provider.util.LocationType;
-import firm.provider.util.OperationType;
+import firm.provider.utils.OperationType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

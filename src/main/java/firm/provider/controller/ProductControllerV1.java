@@ -2,7 +2,7 @@ package firm.provider.controller;
 
 import firm.provider.model.Product;
 import firm.provider.service.ProductService;
-import firm.provider.util.LocationType;
+import firm.provider.utils.LocationType;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +47,25 @@ public class ProductControllerV1 {
         }
 
         return ResponseEntity.ok(productService.getAllByLocationType(locType));
+    }
+
+    @GetMapping(value = "/{firm}", params = "locationType")
+    public ResponseEntity<List<Product>> getAllByLocationType(@PathVariable String firm, @RequestParam(name = "locationType") String locationType) {
+
+        if (locationType.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        LocationType locType = null;
+
+        try {
+            locType = LocationType.valueOf(locationType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Product> products = productService.getAllByLocationName(firm, locType);
+
+        return ResponseEntity.ok(products);
     }
 }

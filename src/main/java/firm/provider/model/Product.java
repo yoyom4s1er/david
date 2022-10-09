@@ -1,7 +1,10 @@
 package firm.provider.model;
 
-import firm.provider.util.LocationType;
-import lombok.*;
+import firm.provider.utils.LocationType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -33,5 +36,5 @@ public class Product {
     private long location_id;
 
     @Transient
-    private Storage location;
+    private Storage locationEntity;
 }

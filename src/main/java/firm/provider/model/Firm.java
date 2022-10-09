@@ -19,6 +19,8 @@ public class Firm implements Storage {
 
     private String name;
 
+    private String password;
+
     @OneToMany
     private List<Order> orders;
 

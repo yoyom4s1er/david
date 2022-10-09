@@ -1,14 +1,10 @@
 package firm.provider.service.Impl;
 
 import firm.provider.model.Firm;
-import firm.provider.model.Order;
 import firm.provider.repository.FirmRepository;
 import firm.provider.repository.OrderRepository;
 import firm.provider.repository.ProductRepository;
 import firm.provider.service.FirmService;
-import firm.provider.service.OrderService;
-import firm.provider.service.ProductService;
-import firm.provider.util.LocationType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +27,11 @@ public class FirmServiceImpl implements FirmService {
     @Override
     public Optional<Firm> findById(Firm firm) {
         return firmRepository.findById(firm.getId());
+    }
+
+    @Override
+    public Optional<Firm> findByName(String name) {
+        return firmRepository.findByName(name);
     }
 
     @Override

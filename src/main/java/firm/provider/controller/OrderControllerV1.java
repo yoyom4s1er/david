@@ -1,7 +1,6 @@
 package firm.provider.controller;
 
 import firm.provider.dto.OrderDto;
-import firm.provider.model.Firm;
 import firm.provider.model.Order;
 import firm.provider.service.OrderService;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("api/v1/orders/")
+@RequestMapping("api/v1/orders")
 @AllArgsConstructor
 public class OrderControllerV1 {
 

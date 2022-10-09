@@ -13,13 +13,13 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("api/v1/firms/")
+@RequestMapping("api/v1/firms")
 @AllArgsConstructor
 public class FirmControllerV1 {
 
     private final FirmService firmService;
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<FirmDto> getFirm(@PathVariable long id) {
         Optional<Firm> firm = firmService.findById(id);
 

@@ -11,6 +11,8 @@ public interface FirmService {
 
     public Optional<Firm> findById(Firm firm);
 
+    public Optional<Firm> findByName(String name);
+
     public List<Firm> getAll();
 
     public boolean addFirm(Firm firm);

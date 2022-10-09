@@ -17,6 +17,7 @@ import java.util.Optional;
 public class FirmRepository {
 
     public static String SELECT_BY_ID = "SELECT * FROM firms where id=?";
+    public static String SELECT_BY_NAME = "SELECT * FROM firms where name=?";
     public static String SELECT = "SELECT * FROM firms";
     public static String INSERT = "INSERT INTO firms(name) VALUES (?)";
 
@@ -35,6 +36,31 @@ public class FirmRepository {
         }
 
         List<Order> orders = OrderRepository.selectByFirmId(dataSource, id);
+
+        for (Order order : orders) {
+            order.setProducts(ProductRepository.selectByOrderId(dataSource, order.getId()));
+            order.setFirm(firm);
+        }
+
+        firm.setProducts(products);
+        firm.setOrders(orders);
+
+        return Optional.of(firm);
+    }
+
+    public Optional<Firm> findByName(String name) {
+        Firm firm = selectByName(dataSource, name);
+
+        if (firm == null) {
+            return Optional.empty();
+        }
+
+        List<Product> products = ProductRepository.selectByFirmId(dataSource, firm.getId());
+        for (Product product : products) {
+            product.setOrders(OrderRepository.selectByproductId(dataSource, product.getId()));
+        }
+
+        List<Order> orders = OrderRepository.selectByFirmId(dataSource, firm.getId());
 
         for (Order order : orders) {
             order.setProducts(ProductRepository.selectByOrderId(dataSource, order.getId()));
@@ -108,6 +134,7 @@ public class FirmRepository {
         return new Firm(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
+                resultSet.getString("password"),
                 null,
                 null
         );
@@ -121,6 +148,28 @@ public class FirmRepository {
 
             PreparedStatement statement = conn.prepareStatement(SELECT_BY_ID);
             statement.setLong(1, id);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                firm = extractFirm(result);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return firm;
+    }
+
+    protected static Firm selectByName(DataSource dataSource,String name) {
+
+        Firm firm = null;
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(SELECT_BY_NAME);
+            statement.setString(1, name);
 
             ResultSet result = statement.executeQuery();
 

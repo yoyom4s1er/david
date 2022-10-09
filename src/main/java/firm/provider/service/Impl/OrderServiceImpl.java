@@ -1,15 +1,11 @@
 package firm.provider.service.Impl;
 
 import firm.provider.model.Order;
-import firm.provider.model.Product;
-import firm.provider.model.Provider;
 import firm.provider.repository.FirmRepository;
 import firm.provider.repository.OrderRepository;
 import firm.provider.repository.ProductRepository;
 import firm.provider.repository.ProviderRepository;
 import firm.provider.service.OrderService;
-import firm.provider.util.LocationType;
-import firm.provider.util.OperationType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

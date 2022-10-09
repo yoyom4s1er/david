@@ -1,12 +1,16 @@
 package firm.provider.repository;
 
+import firm.provider.model.Firm;
 import firm.provider.model.Product;
-import firm.provider.util.LocationType;
+import firm.provider.utils.LocationType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,10 +60,10 @@ public class ProductRepository {
         for (Product product : products) {
             product.setOrders(OrderRepository.selectByproductId(dataSource, product.getId()));
             if (product.getLocationType() == LocationType.FIRM_PROVIDER) {
-                product.setLocation(ProviderRepository.selectById(dataSource, product.getLocation_id()));
+                product.setLocationEntity(ProviderRepository.selectById(dataSource, product.getLocation_id()));
             }
             else if (product.getLocationType() == LocationType.FIRM_COLLECTOR) {
-                product.setLocation(FirmRepository.selectById(dataSource, product.getLocation_id()));
+                product.setLocationEntity(FirmRepository.selectById(dataSource, product.getLocation_id()));
             }
         }
 
@@ -73,10 +77,28 @@ public class ProductRepository {
         for (Product product : products) {
             product.setOrders(OrderRepository.selectByproductId(dataSource, product.getId()));
             if (product.getLocationType() == LocationType.FIRM_PROVIDER) {
-                product.setLocation(ProviderRepository.selectById(dataSource, product.getLocation_id()));
+                product.setLocationEntity(ProviderRepository.selectById(dataSource, product.getLocation_id()));
             }
             else if (product.getLocationType() == LocationType.FIRM_COLLECTOR) {
-                product.setLocation(FirmRepository.selectById(dataSource, product.getLocation_id()));
+                product.setLocationEntity(FirmRepository.selectById(dataSource, product.getLocation_id()));
+            }
+        }
+
+        return products;
+    }
+
+    public List<Product> getAllByLocationName(String firm, LocationType locType) {
+        long firmId = FirmRepository.selectByName(dataSource, firm).getId();
+
+        List<Product> products = selectAllByLocationTypeAndLocationId(dataSource, locType, firmId);
+
+        for (Product product : products) {
+            product.setOrders(OrderRepository.selectByproductId(dataSource, product.getId()));
+            if (product.getLocationType() == LocationType.FIRM_PROVIDER) {
+                product.setLocationEntity(ProviderRepository.selectById(dataSource, product.getLocation_id()));
+            }
+            else if (product.getLocationType() == LocationType.FIRM_COLLECTOR) {
+                product.setLocationEntity(FirmRepository.selectById(dataSource, product.getLocation_id()));
             }
         }
 
@@ -297,5 +319,4 @@ public class ProductRepository {
 
         return products;
     }
-
 }

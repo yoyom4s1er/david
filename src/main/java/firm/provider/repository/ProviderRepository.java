@@ -1,9 +1,6 @@
 package firm.provider.repository;
 
-import firm.provider.model.Firm;
-import firm.provider.model.Product;
 import firm.provider.model.Provider;
-import firm.provider.util.LocationType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
