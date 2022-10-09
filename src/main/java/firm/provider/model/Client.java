@@ -18,4 +18,7 @@ public class Client {
 
     @OneToMany
     private List<Order> orders;
+
+    @Transient
+    private List<Product> products;
 }

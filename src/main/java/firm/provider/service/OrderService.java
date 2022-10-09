@@ -1,5 +1,6 @@
 package firm.provider.service;
 
+import firm.provider.dto.BuyProduct;
 import firm.provider.model.Order;
 
 import java.util.List;

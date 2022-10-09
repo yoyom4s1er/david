@@ -5,6 +5,7 @@ import firm.provider.model.Order;
 import firm.provider.model.Product;
 import firm.provider.utils.OperationType;
 import lombok.AllArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -57,70 +58,30 @@ public class OrderRepository {
 
     public boolean save(Order order) {
 
-        try (Connection conn = dataSource.getConnection()) {
+        long id = insert(dataSource, order);
+        order.setId(id);
 
-            PreparedStatement statement = conn.prepareStatement(INSERT);
-            statement.setObject(1, order.getOperationTargetId());
-            statement.setObject(2, order.getDate());
-            statement.setString(3, order.getOperationType().name());
-            statement.setObject(4, order.getFirm().getId());
-
-            statement.executeUpdate();
-
-            statement = conn.prepareStatement(INSERT_INTO_ORDERS_PRODUCTS);
-
-            for (Product product : order.getProducts()) {
-                statement.setLong(1, order.getId());
-                statement.setLong(2, product.getId());
-                statement.addBatch();
-            }
-
-            statement.executeBatch();
-
-            return true;
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        if (id == 0) {
+            return false;
         }
 
-        return false;
+        if (!insertIntoOrdersProducts(dataSource, order)) {
+            return false;
+        }
+
+        return true;
     }
 
     public boolean save(List<Order> orders) {
 
-        try (Connection conn = dataSource.getConnection()) {
-
-            PreparedStatement statement = conn.prepareStatement(INSERT);
-
-            for (Order order: orders) {
-                statement.setObject(1, order.getOperationTargetId());
-                statement.setObject(2, order.getDate());
-                statement.setString(3, order.getOperationType().name());
-                statement.setObject(4, order.getFirm().getId());
-                statement.addBatch();
-            }
-
-            statement.executeBatch();
-
-            statement = conn.prepareStatement(INSERT_INTO_ORDERS_PRODUCTS);
-
-            for (Order order: orders) {
-                for (Product product : order.getProducts()) {
-                    statement.setLong(1, order.getId());
-                    statement.setLong(2, product.getId());
-                    statement.addBatch();
-                }
-            }
-
-            statement.executeBatch();
-
-            return true;
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        /*if (!insert(dataSource, orders)) {
+            return false;
         }
+        if (!insertIntoOrdersProducts(dataSource, orders)) {
+            return false;
+        }*/
 
-        return false;
+        return true;
     }
 
     public List<Order> getAllByFirmId(long id) {
@@ -166,6 +127,114 @@ public class OrderRepository {
         }
 
         return order;
+    }
+
+    protected static Long insert(DataSource dataSource, List<Order> orders) {
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+
+            for (Order order: orders) {
+                statement.setObject(1, order.getOperationTargetId());
+                statement.setObject(2, order.getDate());
+                statement.setString(3, order.getOperationType().name());
+                statement.setObject(4, order.getFirm().getId());
+                statement.addBatch();
+            }
+
+            statement.executeUpdate();
+
+            ResultSet resultSet = statement.getGeneratedKeys();
+
+            if (resultSet.next()) {
+                return resultSet.getLong(1);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return (long)0;
+    }
+
+    protected static Long insert(DataSource dataSource, Order order) {
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+
+            statement.setObject(1, order.getOperationTargetId());
+            statement.setObject(2, order.getDate());
+            statement.setString(3, order.getOperationType().name());
+            statement.setObject(4, order.getFirm().getId());
+
+            statement.executeUpdate();
+
+            ResultSet resultSet = statement.getGeneratedKeys();
+
+            if (resultSet.next()) {
+                return resultSet.getLong(1);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return (long)0;
+
+    }
+
+    protected static boolean insertIntoOrdersProducts(DataSource dataSource, List<Order> orders) {
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(INSERT_INTO_ORDERS_PRODUCTS);
+
+            for (Order order: orders) {
+                for (Product product : order.getProducts()) {
+                    statement.setLong(1, order.getId());
+                    statement.setLong(2, product.getId());
+                    statement.addBatch();
+                }
+            }
+
+            statement.executeBatch();
+
+            return true;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+
+    }
+
+    protected static boolean insertIntoOrdersProducts(DataSource dataSource, Order order) {
+
+        System.out.println(order);
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(INSERT_INTO_ORDERS_PRODUCTS);
+
+            for (Product product : order.getProducts()) {
+                statement.setLong(1, order.getId());
+                statement.setLong(2, product.getId());
+                statement.addBatch();
+            }
+
+            statement.executeBatch();
+
+            return true;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+
     }
 
     protected static List<Order> selectByproductId(DataSource dataSource, long id) {

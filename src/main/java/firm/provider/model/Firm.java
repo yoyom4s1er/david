@@ -31,4 +31,7 @@ public class Firm implements Storage {
         this.id = id;
     }
 
+    public Firm(String name) {
+        this.name = name;
+    }
 }

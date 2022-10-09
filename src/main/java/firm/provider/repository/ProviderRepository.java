@@ -1,5 +1,6 @@
 package firm.provider.repository;
 
+import firm.provider.model.Product;
 import firm.provider.model.Provider;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,29 +22,16 @@ public class ProviderRepository {
     public static String INSERT = "INSERT INTO providers(name) VALUES (?)";
     public static String SELECT_BY_ID = "SELECT * FROM providers where id=?";
     public static String SELECT = "SELECT * FROM providers";
+    //public static String DROP_BY_ID = "DELETE from ";
 
     DataSource dataSource;
 
     public List<Provider> getAll() {
 
-        List<Provider> providers = new ArrayList<>();
+        List<Provider> providers = select(dataSource);
 
-        try (Connection conn = dataSource.getConnection()) {
-
-            PreparedStatement statement = conn.prepareStatement(SELECT);
-
-            ResultSet result = statement.executeQuery();
-
-            while (result.next()) {
-                providers.add(extractProvider(result));
-            }
-
-            for (Provider provider : providers) {
-                provider.setProducts(ProductRepository.selectByProviderId(dataSource, provider.getId()));
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        for (Provider provider : providers) {
+            provider.setProducts(ProductRepository.selectByProviderId(dataSource, provider.getId()));
         }
 
         return providers;
@@ -65,6 +53,10 @@ public class ProviderRepository {
         }
 
         return false;
+    }
+
+    public void deleteProducts(List<Product> products) {
+
     }
 
     public Optional<Provider> findById(long id) {
@@ -121,4 +113,41 @@ public class ProviderRepository {
         return provider;
     }
 
+    protected static List<Provider> select(DataSource dataSource) {
+
+        List<Provider> providers = new ArrayList<>();
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(SELECT);
+
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                providers.add(extractProvider(result));
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return providers;
+    }
+
+    /*protected static void dropById(DataSource dataSource, long id) {
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(DROP_BY_ID);
+
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                System.out.println(result);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }*/
 }

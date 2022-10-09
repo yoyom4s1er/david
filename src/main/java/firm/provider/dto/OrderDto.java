@@ -8,6 +8,7 @@ import firm.provider.utils.OperationType;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -15,8 +16,7 @@ public class OrderDto {
 
     private long id;
 
-    @JsonIgnoreProperties(value = { "orders", "products" })
-    private Firm firm;
+    private String firmName;
 
     private OperationType operationType;
 
@@ -24,16 +24,21 @@ public class OrderDto {
 
     private LocalDateTime date;
 
-    private List<Product> products;
+    private List<Long> products;
 
     public Order toOrder() {
         Order order = new Order();
         order.setId(id);
-        order.setFirm(firm);
+        order.setFirm(new Firm(firmName));
         order.setOperationType(operationType);
         order.setOperationTargetId(operationTargetId);
         order.setDate(date);
-        order.setProducts(products);
+        List<Product> productList = new ArrayList<>();
+        for (Long id:
+             products) {
+            productList.add(new Product(id));
+        }
+        order.setProducts(productList);
 
         return order;
     }
@@ -42,11 +47,13 @@ public class OrderDto {
         OrderDto orderDto = new OrderDto();
 
         orderDto.setId(order.getId());
-        orderDto.setFirm(order.getFirm());
+        orderDto.setFirmName(order.getFirm().getName());
         orderDto.setOperationType(order.getOperationType());
         orderDto.setOperationTargetId(order.getOperationTargetId());
         orderDto.setDate(order.getDate());
-        orderDto.setProducts(order.getProducts());
+        for (Product product: order.getProducts()) {
+            orderDto.getProducts().add(product.getId());
+        }
 
         return orderDto;
     }

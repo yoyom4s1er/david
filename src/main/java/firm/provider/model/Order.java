@@ -38,4 +38,16 @@ public class Order {
     public Order(long id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", firm=" + firm +
+                ", operationType=" + operationType +
+                ", OperationTargetId=" + OperationTargetId +
+                ", date=" + date +
+                ", products=" + products +
+                '}';
+    }
 }

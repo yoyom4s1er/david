@@ -1,16 +1,14 @@
 package firm.provider.repository;
 
 import firm.provider.model.Firm;
+import firm.provider.model.Order;
 import firm.provider.model.Product;
 import firm.provider.utils.LocationType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +25,7 @@ public class ProductRepository {
     public static String SELECT_ALL = "SELECT * FROM products";
     public static String SELECT_BY_FIRM_ID = "SELECT * FROM products where location_type=? and location_id=?";
     public static String SELECT_BY_PROVIDER_ID = "SELECT * FROM products where location_type=? and location_id=?";
+    public static String UPDATE_LOCATION_TYPE_AND_LOCATION_ID_BY_ID = "UPDATE products set location_type=?, location_id=? where id=?";
 
     DataSource dataSource;
 
@@ -125,6 +124,10 @@ public class ProductRepository {
         }
 
         return false;
+    }
+
+    public void updateLocationTypeAndLocationIdById(Product product) {
+        updateLocationTypeAndLocationIdById(dataSource, product.getLocationType(), product.getLocation_id(), product.getId());
     }
 
     public boolean save(List<Product> products) {
@@ -282,7 +285,7 @@ public class ProductRepository {
         try (Connection conn = dataSource.getConnection()) {
 
             PreparedStatement statement = conn.prepareStatement(SELECT_BY_LOCATION_TYPE_AND_BY_LOCATION_ID);
-            statement.setString(1, locationType.name());
+            statement.setString(1, locationType.toString());
             statement.setLong(2, locationId);
 
             ResultSet result = statement.executeQuery();
@@ -318,5 +321,22 @@ public class ProductRepository {
         }
 
         return products;
+    }
+
+    protected void updateLocationTypeAndLocationIdById(DataSource dataSource, LocationType locationType, long locationId, long id) {
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(UPDATE_LOCATION_TYPE_AND_LOCATION_ID_BY_ID);
+
+            statement.setString(1, locationType.name());
+            statement.setLong(2, locationId);
+            statement.setLong(3, id);
+
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }

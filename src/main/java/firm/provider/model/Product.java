@@ -37,4 +37,8 @@ public class Product {
 
     @Transient
     private Storage locationEntity;
+
+    public Product(long id) {
+        this.id = id;
+    }
 }
