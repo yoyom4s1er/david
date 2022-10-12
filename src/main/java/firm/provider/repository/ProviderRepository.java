@@ -1,7 +1,9 @@
 package firm.provider.repository;
 
+import firm.provider.model.Firm;
 import firm.provider.model.Product;
 import firm.provider.model.Provider;
+import firm.provider.security.jwt.JwtUser;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,10 +23,32 @@ public class ProviderRepository {
 
     public static String INSERT = "INSERT INTO providers(name) VALUES (?)";
     public static String SELECT_BY_ID = "SELECT * FROM providers where id=?";
+    public static String SELECT_BY_NAME = "SELECT * FROM providers where name=?";
     public static String SELECT = "SELECT * FROM providers";
     //public static String DROP_BY_ID = "DELETE from ";
 
     DataSource dataSource;
+
+    public static Provider selectByName(DataSource dataSource, String locationName) {
+        Provider provider = null;
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(SELECT_BY_NAME);
+            statement.setString(1, locationName);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                provider = extractProvider(result);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return provider;
+    }
 
     public List<Provider> getAll() {
 

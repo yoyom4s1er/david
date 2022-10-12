@@ -5,6 +5,8 @@ import firm.provider.model.Firm;
 import firm.provider.model.Order;
 import firm.provider.service.FirmService;
 import firm.provider.service.OrderService;
+import firm.provider.service.ProviderService;
+import firm.provider.utils.OperationType;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ public class OrderControllerV1 {
 
     private final OrderService orderService;
     private final FirmService firmService;
+    private final ProviderService providerService;
 
     @GetMapping("")
     public ResponseEntity<List<OrderDto>> getOrders() {

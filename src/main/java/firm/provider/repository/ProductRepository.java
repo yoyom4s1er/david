@@ -105,6 +105,36 @@ public class ProductRepository {
         return products;
     }
 
+    public List<Product> getAllByLocationTypeAndLocationName(LocationType locType, String locationName) {
+        long locationId = 0;
+
+        if (locType == LocationType.FIRM_PROVIDER) {
+            locationId = ProviderRepository.selectByName(dataSource, locationName).getId();
+        }
+        else if (locType == LocationType.FIRM_COLLECTOR) {
+            locationId = FirmRepository.selectByName(dataSource, locationName).getId();
+        }
+        /*else if (locType == LocationType.CLIENT) {
+            locationId = ClientRepository.selectByName(dataSource, locationName).getId();
+        }*/
+
+
+
+        List<Product> products = selectAllByLocationTypeAndLocationId(dataSource, locType, locationId);
+
+        for (Product product : products) {
+            product.setOrders(OrderRepository.selectByproductId(dataSource, product.getId()));
+            if (product.getLocationType() == LocationType.FIRM_PROVIDER) {
+                product.setLocationEntity(ProviderRepository.selectById(dataSource, product.getLocation_id()));
+            }
+            else if (product.getLocationType() == LocationType.FIRM_COLLECTOR) {
+                product.setLocationEntity(FirmRepository.selectById(dataSource, product.getLocation_id()));
+            }
+        }
+
+        return products;
+    }
+
     public float getTotalPrice(List<Product> products) {
         return selectTotalPriceById(dataSource, products);
     }

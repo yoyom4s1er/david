@@ -44,6 +44,7 @@ public class OrderRepository {
                         new Firm(result.getLong("firm_id")),
                         OperationType.valueOf(result.getString("operation_type")),
                         result.getLong("operation_target_id"),
+                        null,
                         LocalDateTime.ofInstant(result.getTimestamp("date").toInstant(), ZoneId.systemDefault()),
                         result.getFloat("total_price"),
                         null
@@ -95,6 +96,14 @@ public class OrderRepository {
              orders) {
             order.setFirm(firm);
             order.setProducts(ProductRepository.selectByOrderId(dataSource, order.getId()));
+            if (order.getOperationType() == OperationType.BUY) {
+                order.setLocationTargetName(
+                        ProviderRepository.selectById(dataSource, order.getOperationTargetId()).getName()
+                );
+            }
+            /*else if (order.getOperationType() == OperationType.SELL) {
+            }*/
+
         }
 
         return orders;
@@ -278,6 +287,7 @@ public class OrderRepository {
                 null,
                 OperationType.valueOf(result.getString("operation_type")),
                 result.getLong("operation_target_id"),
+                null,
                 LocalDateTime.ofInstant(result.getTimestamp("date").toInstant(), ZoneId.systemDefault()),
                 result.getFloat("total_price"),
                 null

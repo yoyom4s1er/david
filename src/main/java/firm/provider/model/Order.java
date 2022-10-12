@@ -30,6 +30,9 @@ public class Order {
 
     private long OperationTargetId;
 
+    @Transient
+    private String locationTargetName;
+
     private LocalDateTime date;
 
     private float totalPrice;

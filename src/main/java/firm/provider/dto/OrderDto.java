@@ -22,7 +22,11 @@ public class OrderDto {
 
     private long operationTargetId;
 
+    private String operationTargetName;
+
     private LocalDateTime date;
+
+    private float totalPrice;
 
     private List<Long> products = new ArrayList<>();
 
@@ -32,7 +36,9 @@ public class OrderDto {
         order.setFirm(new Firm(firmName));
         order.setOperationType(operationType);
         order.setOperationTargetId(operationTargetId);
+        order.setLocationTargetName(operationTargetName);
         order.setDate(date);
+        order.setTotalPrice(totalPrice);
         List<Product> productList = new ArrayList<>();
         for (Long id:
              products) {
@@ -50,7 +56,9 @@ public class OrderDto {
         orderDto.setFirmName(order.getFirm().getName());
         orderDto.setOperationType(order.getOperationType());
         orderDto.setOperationTargetId(order.getOperationTargetId());
+        orderDto.setOperationTargetName(order.getLocationTargetName());
         orderDto.setDate(order.getDate());
+        orderDto.setTotalPrice(order.getTotalPrice());
         for (Product product: order.getProducts()) {
             orderDto.getProducts().add(product.getId());
         }

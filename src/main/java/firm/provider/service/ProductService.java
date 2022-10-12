@@ -14,4 +14,6 @@ public interface ProductService {
     boolean addProduct(Product product);
 
     List<Product> getAllByLocationName(String firm, LocationType locType);
+
+    List<Product> getAllByLocationTypeAndLocationName(LocationType locType, String locationName);
 }

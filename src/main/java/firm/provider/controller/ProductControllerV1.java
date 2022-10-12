@@ -68,4 +68,24 @@ public class ProductControllerV1 {
 
         return ResponseEntity.ok(products);
     }
+
+    @GetMapping(value = "", params = {"locationType", "locationName"})
+    public ResponseEntity<List<Product>> getAllByLocationTypeAndLocationName(@RequestParam(name = "locationType") String locationType, @RequestParam(name = "locationName") String locationName) {
+
+        if (locationType.isEmpty() || locationName.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        LocationType locType = null;
+
+        try {
+            locType = LocationType.valueOf(locationType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(productService.getAllByLocationTypeAndLocationName(locType, locationName));
+    }
+
+
 }
