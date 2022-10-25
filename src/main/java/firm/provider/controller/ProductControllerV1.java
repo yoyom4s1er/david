@@ -26,10 +26,10 @@ public class ProductControllerV1 {
         return ResponseEntity.badRequest().build();
     }
 
-    @GetMapping("")
+    /*@GetMapping("")
     public ResponseEntity<List<Product>> getAll() {
         return ResponseEntity.ok(productService.getAll());
-    }
+    }*/
 
     @GetMapping(value = "", params = "locationType")
     public ResponseEntity<List<Product>> getAllByLocationType(@RequestParam(name = "locationType") String locationType) {
@@ -47,6 +47,11 @@ public class ProductControllerV1 {
         }
 
         return ResponseEntity.ok(productService.getAllByLocationType(locType));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<Product>> getProductsById(@RequestBody List<Long> productsId) {
+        return ResponseEntity.ok(productService.getAllById(productsId));
     }
 
     @GetMapping(value = "/{firm}", params = "locationType")

@@ -16,4 +16,6 @@ public interface ProductService {
     List<Product> getAllByLocationName(String firm, LocationType locType);
 
     List<Product> getAllByLocationTypeAndLocationName(LocationType locType, String locationName);
+
+    List<Product> getAllById(List<Long> productsId);
 }

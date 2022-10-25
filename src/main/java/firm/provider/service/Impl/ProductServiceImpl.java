@@ -40,4 +40,9 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAllByLocationTypeAndLocationName(LocationType locType, String locationName) {
         return productRepository.getAllByLocationTypeAndLocationName(locType, locationName);
     }
+
+    @Override
+    public List<Product> getAllById(List<Long> productsId) {
+        return productRepository.getAllById(productsId);
+    }
 }

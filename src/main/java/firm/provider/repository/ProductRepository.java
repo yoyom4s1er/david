@@ -70,6 +70,23 @@ public class ProductRepository {
         return products;
     }
 
+    public List<Product> getAllById(List<Long> productsId) {
+
+        List<Product> products = selectById(dataSource, productsId);
+
+        for (Product product : products) {
+            product.setOrders(OrderRepository.selectByproductId(dataSource, product.getId()));
+            if (product.getLocationType() == LocationType.FIRM_PROVIDER) {
+                product.setLocationEntity(ProviderRepository.selectById(dataSource, product.getLocation_id()));
+            }
+            else if (product.getLocationType() == LocationType.FIRM_COLLECTOR) {
+                product.setLocationEntity(FirmRepository.selectById(dataSource, product.getLocation_id()));
+            }
+        }
+
+        return products;
+    }
+
     public List<Product> getAllByLocationType(LocationType locationType) {
 
         List<Product> products = selectAllByLocationType(dataSource, locationType);
@@ -246,6 +263,31 @@ public class ProductRepository {
         }
 
         return product;
+    }
+
+    protected static List<Product> selectById(DataSource dataSource, List<Long> productsId) {
+
+        List<Product> products = new ArrayList<>();
+
+        try (Connection conn = dataSource.getConnection()) {
+
+            PreparedStatement statement = conn.prepareStatement(SELECT_BY_ID);
+            for (Long id:
+                 productsId) {
+                statement.setLong(1, id);
+
+                ResultSet result = statement.executeQuery();
+
+                if (result.next()) {
+                    products.add(extractProduct(result));
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return products;
     }
 
     protected static List<Product> selectAll(DataSource dataSource) {

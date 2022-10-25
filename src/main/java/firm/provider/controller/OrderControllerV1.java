@@ -3,6 +3,7 @@ package firm.provider.controller;
 import firm.provider.dto.OrderDto;
 import firm.provider.model.Firm;
 import firm.provider.model.Order;
+import firm.provider.model.Product;
 import firm.provider.service.FirmService;
 import firm.provider.service.OrderService;
 import firm.provider.service.ProviderService;
@@ -49,6 +50,7 @@ public class OrderControllerV1 {
 
         return ResponseEntity.ok(orders);
     }
+
 
     @PostMapping("")
     public ResponseEntity addOrder(@RequestBody OrderDto orderDto) {
