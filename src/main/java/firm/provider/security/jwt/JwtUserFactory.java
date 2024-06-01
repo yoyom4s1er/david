@@ -1,22 +1,16 @@
 package firm.provider.security.jwt;
 
-import firm.provider.model.Firm;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import firm.provider.model.MyUser;
 
 public final class JwtUserFactory {
     public JwtUserFactory() {
     }
 
-    public static JwtUser create(Firm firm) {
+    public static JwtUser create(MyUser user) {
         return new JwtUser(
-                firm.getId(),
-                firm.getName(),
-                firm.getPassword()
+                user.getId(),
+                user.getMail(),
+                user.getPassword()
         );
     }
 

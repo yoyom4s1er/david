@@ -3,8 +3,8 @@ package firm.provider.service;
 import firm.provider.dto.JwtRequest;
 import firm.provider.dto.JwtResponse;
 import firm.provider.security.jwt.JwtTokenAuthentication;
+import jakarta.security.auth.message.AuthException;
 
-import javax.security.auth.message.AuthException;
 
 public interface AuthService {
 

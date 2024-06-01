@@ -4,6 +4,7 @@ import firm.provider.dto.JwtRequest;
 import firm.provider.dto.JwtResponse;
 import firm.provider.dto.RefreshJwtRequest;
 import firm.provider.service.AuthService;
+import jakarta.security.auth.message.AuthException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.security.auth.message.AuthException;
 import java.time.Duration;
 
 @RestController

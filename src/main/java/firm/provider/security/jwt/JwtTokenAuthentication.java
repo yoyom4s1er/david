@@ -14,7 +14,7 @@ public class JwtTokenAuthentication implements Authentication {
 
     private boolean authenticated;
 
-    private String username;
+    private String mail;
 
     private String firstName;
 
@@ -37,7 +37,7 @@ public class JwtTokenAuthentication implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return username;
+        return mail;
     }
 
     @Override

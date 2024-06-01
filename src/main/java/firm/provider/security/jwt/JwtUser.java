@@ -6,14 +6,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Date;
 
 @AllArgsConstructor
 public class JwtUser implements UserDetails {
 
     private final Long id;
 
-    private final String username;
+    private final String mail;
 
     private final String password;
 
@@ -35,7 +34,7 @@ public class JwtUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return mail;
     }
 
     @JsonIgnore

@@ -11,11 +11,10 @@ import javax.sql.DataSource;
 @Component
 public class DatabaseConfig {
 
-    private final String url;
+    /*private final String url;
     private final String username;
     private final String password;
 
-    @Autowired
     public DatabaseConfig(
             @Value("${spring.datasource.url}") String url,
             @Value("${spring.datasource.username}") String user,
@@ -23,15 +22,15 @@ public class DatabaseConfig {
         this.url = url;
         this.username = user;
         this.password = password;
-    }
+    }*/
 
     @Bean
-    public DataSource mysqlDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
+    public DataSource dataSource(){
+        DriverManagerDataSource source = new DriverManagerDataSource();
+        source.setDriverClassName("org.postgresql.Driver");
+        source.setUrl("jdbc:postgresql://localhost:5432/education");
+        source.setUsername("postgres");
+        source.setPassword("root");
+        return source;
     }
 }

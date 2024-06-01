@@ -1,10 +1,11 @@
 package firm.provider.security.jwt;
 
-import firm.provider.model.Firm;
+import firm.provider.model.MyUser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,14 +13,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Component
 @Slf4j
@@ -35,34 +33,31 @@ public class JwtTokenProvider {
 
     @Autowired
     public JwtTokenProvider(
-            @Value("${jwt.secret.access}") String AccessSecret,
-            @Value("${jwt.secret.refresh}") String RefreshSecret,
-            @Value("${jwt.token.expired}")long validityInMinutes,
             UserDetailsService userDetailsService) {
-        this.accessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(AccessSecret));
-        this.refreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(RefreshSecret));
-        this.validityInMinutes = validityInMinutes;
+        this.accessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode("qBTmv4oXFFR2GwjexDJ4t6fsIUIUhhXqlktXjXdkcyygs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w=="));
+        this.refreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode("zL1HB3Pch05Avfynovxrf/kpF9O2m4NCWKJUjEp27s9J2jEG3ifiKCGylaZ8fDeoONSTJP/wAzKawB8F9rOMNg=="));
+        this.validityInMinutes = 10000;
         this.userDetailsService = userDetailsService;
     }
-    public String generateAccessToken(Firm firm) {
+    public String generateAccessToken(MyUser user) {
 
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusMinutes(validityInMinutes).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
 
         return Jwts.builder()
-                .setSubject(firm.getName())
+                .setSubject(user.getMail())
                 .setExpiration(accessExpiration)
                 .signWith(accessSecret)
                 .compact();
     }
 
-    public String generateRefreshToken(Firm firm) {
+    public String generateRefreshToken(MyUser user) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant refreshExpirationInstant = now.plusMinutes(validityInMinutes * 6 * 24 * 10).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
         return Jwts.builder()
-                .setSubject(firm.getName())
+                .setSubject(user.getMail())
                 .setExpiration(refreshExpiration)
                 .signWith(refreshSecret)
                 .compact();
