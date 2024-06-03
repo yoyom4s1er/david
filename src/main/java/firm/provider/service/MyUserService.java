@@ -1,5 +1,6 @@
 package firm.provider.service;
 
+import firm.provider.exception.WrongFieldsRegisterException;
 import firm.provider.model.MyUser;
 import firm.provider.repository.UserRepository;
 import firm.provider.utils.PasswordEncoder;
@@ -19,6 +20,38 @@ public class MyUserService {
         return userRepository.findUserByMailIs(mail);
     }
     public void addUser(MyUser user) {
+
+        if (user.getFirstName() == null ||
+                user.getLastName() == null ||
+                user.getThirdName() == null) {
+            throw new WrongFieldsRegisterException("Имя, Фамилия, Отчество должно содержать хотя бы 1 символ");
+        }
+
+        if (user.getFirstName().isEmpty() ||
+                user.getLastName().isEmpty() ||
+                user.getThirdName().isEmpty()) {
+            throw new WrongFieldsRegisterException("Имя, Фамилия, Отчество должно содержать хотя бы 1 символ");
+        }
+
+        if (!user.getFirstName().matches("[А-ЯЁа-яё]+") ||
+                !user.getLastName().matches("[А-ЯЁа-яё]+") ||
+                !user.getThirdName().matches("[А-ЯЁа-яё]+")) {
+            throw new WrongFieldsRegisterException("Имя, Фамилия, Отчество должны состоять только из кириллицы");
+        }
+
+        if (user.getPassword().length() < 4) {
+            throw new WrongFieldsRegisterException("Пароль должен состоять минимум из 4 символов");
+
+        }
+
+        if (!user.getMail().contains("@")) {
+            throw new WrongFieldsRegisterException("Почта должна содержать символ \"@\"");
+        }
+
+        if (user.getMail().indexOf("@") == 0 || user.getMail().indexOf("@") == user.getMail().length() - 1) {
+            throw new WrongFieldsRegisterException("Почта должна иметь символы до @ и после @");
+        }
+
         user.setPassword(PasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
